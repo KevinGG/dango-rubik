@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import * as THREE from 'three'; 
 
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -12,19 +11,31 @@ class App extends Component {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    var cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
+    let cubes = this.build_cubes(scene);
     camera.position.z = 5;
     var animate = function () {
       requestAnimationFrame( animate );
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-      renderer.render( scene, camera );
+      for (let i=0; i<cubes.length; i++) {
+        cubes[i].rotation.x += 0.01;
+        cubes[i].rotation.y += 0.01;
+        renderer.render( scene, camera );
+      }
     };
     animate();
     // === THREE.JS EXAMPLE CODE END ===
+  }
+
+  build_cubes(scene) {
+    let cubes = [];
+    for(let i=0; i < 27; ++i) {
+      var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+      geometry.translate(i%9,i%9,i%9);
+      var material = new THREE.MeshBasicMaterial( { color: 0xff00ff } );
+      var cube = new THREE.Mesh( geometry, material );
+      scene.add(cube);
+      cubes.push(cube);
+    }
+    return cubes;
   }
 
   render() {
